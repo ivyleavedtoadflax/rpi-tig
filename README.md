@@ -28,6 +28,6 @@
 |telegraf|INFLUXDB_HOST|Typically local IP, assuming that the influxdb database is being run locally|
 |telegraf|INFLUXDB_PORT|Typically 8086|
 
-* Create `sudo makdir /data` to create a directory to be used for volume storage.
-* Run `Make all`.
-* To stop and remove containers run `Make clean`
+* Create `sudo mkdir /data` to create a directory to be used for volume storage.
+* Run `make all`.
+* To stop and remove containers run `make clean`
