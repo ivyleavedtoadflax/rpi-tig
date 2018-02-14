@@ -1,3 +1,4 @@
+
 {
   "__inputs": [
     {
@@ -7,6 +8,27 @@
       "type": "datasource",
       "pluginId": "influxdb",
       "pluginName": "InfluxDB"
+    },
+    {
+      "name": "VAR_MQTT_TOPIC",
+      "type": "constant",
+      "label": "mqtt_topic",
+      "value": "tele/electricity/",
+      "description": ""
+    },
+    {
+      "name": "VAR_DAY_RATE",
+      "type": "constant",
+      "label": "day_rate",
+      "value": "0.15158",
+      "description": ""
+    },
+    {
+      "name": "VAR_PULSE_RATE",
+      "type": "constant",
+      "label": "pulse_rate",
+      "value": "0.00025",
+      "description": ""
     }
   ],
   "__requires": [
@@ -58,7 +80,7 @@
   "rows": [
     {
       "collapse": false,
-      "height": 274,
+      "height": 232,
       "panels": [
         {
           "cacheTimeout": null,
@@ -70,136 +92,14 @@
             "#299c46"
           ],
           "datasource": "${DS_INFLUXDB}",
-          "decimals": 1,
-          "format": "kwatth",
+          "decimals": 2,
+          "format": "currencyEUR",
           "gauge": {
-            "maxValue": 100,
+            "maxValue": 5,
             "minValue": 0,
             "show": true,
-            "thresholdLabels": false,
-            "thresholdMarkers": false
-          },
-          "hideTimeOverride": false,
-          "id": 3,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "span": 4,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": false
-          },
-          "tableColumn": "sum",
-          "targets": [
-            {
-              "dsType": "influxdb",
-              "groupBy": [
-                {
-                  "params": [
-                    "1m"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "measurement": "mqtt_consumer",
-              "orderByTime": "ASC",
-              "policy": "default",
-              "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "Pulses"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "sum"
-                  },
-                  {
-                    "params": [
-                      "*0.001"
-                    ],
-                    "type": "math"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "topic",
-                  "operator": "=",
-                  "value": "tele/electricity/adu/"
-                }
-              ]
-            }
-          ],
-          "thresholds": "",
-          "timeFrom": "12h",
-          "timeShift": null,
-          "title": "Usage 12 hours",
-          "type": "singlestat",
-          "valueFontSize": "70%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "total"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": true,
-          "colors": [
-            "#d44a3a",
-            "rgba(237, 129, 40, 0.89)",
-            "#299c46"
-          ],
-          "datasource": "${DS_INFLUXDB}",
-          "decimals": 1,
-          "format": "kwatth",
-          "gauge": {
-            "maxValue": 10,
-            "minValue": 0,
-            "show": true,
-            "thresholdLabels": false,
-            "thresholdMarkers": false
+            "thresholdLabels": true,
+            "thresholdMarkers": true
           },
           "hideTimeOverride": false,
           "id": 2,
@@ -230,7 +130,7 @@
               "to": "null"
             }
           ],
-          "span": 4,
+          "span": 3,
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
             "full": false,
@@ -244,7 +144,7 @@
               "groupBy": [
                 {
                   "params": [
-                    "1m"
+                    "1h"
                   ],
                   "type": "time"
                 },
@@ -274,7 +174,7 @@
                   },
                   {
                     "params": [
-                      "*0.001"
+                      "* $pulse_rate * $day_rate"
                     ],
                     "type": "math"
                   }
@@ -283,16 +183,17 @@
               "tags": [
                 {
                   "key": "topic",
-                  "operator": "=",
-                  "value": "tele/electricity/adu/"
+                  "operator": "=~",
+                  "value": "/^$mqtt_topic$/"
                 }
               ]
             }
           ],
           "thresholds": "",
-          "timeFrom": "1h",
+          "timeFrom": "12h",
           "timeShift": null,
-          "title": "Usage last hour",
+          "title": "Usage over last 12 hours",
+          "transparent": true,
           "type": "singlestat",
           "valueFontSize": "70%",
           "valueMaps": [
@@ -315,13 +216,137 @@
           ],
           "datasource": "${DS_INFLUXDB}",
           "decimals": 2,
-          "format": "kwatth",
+          "format": "currencyEUR",
           "gauge": {
-            "maxValue": 0.25,
+            "maxValue": 1,
             "minValue": 0,
             "show": true,
-            "thresholdLabels": false,
-            "thresholdMarkers": false
+            "thresholdLabels": true,
+            "thresholdMarkers": true
+          },
+          "hideTimeOverride": false,
+          "id": 6,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 3,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "sum",
+          "targets": [
+            {
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "1m"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "linear"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "hide": false,
+              "measurement": "mqtt_consumer",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "Pulses"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "sum"
+                  },
+                  {
+                    "params": [
+                      "* $pulse_rate * $day_rate"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "topic",
+                  "operator": "=~",
+                  "value": "/^$mqtt_topic$/"
+                }
+              ]
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": "1h",
+          "timeShift": null,
+          "title": "Usage over last hour",
+          "transparent": true,
+          "type": "singlestat",
+          "valueFontSize": "70%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "total"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "#d44a3a",
+            "rgba(237, 129, 40, 0.89)",
+            "#299c46"
+          ],
+          "datasource": "${DS_INFLUXDB}",
+          "decimals": 3,
+          "format": "currencyEUR",
+          "gauge": {
+            "maxValue": 0.05,
+            "minValue": 0,
+            "show": true,
+            "thresholdLabels": true,
+            "thresholdMarkers": true
           },
           "hideTimeOverride": false,
           "id": 4,
@@ -352,7 +377,7 @@
               "to": "null"
             }
           ],
-          "span": 4,
+          "span": 3,
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
             "full": false,
@@ -372,7 +397,7 @@
                 },
                 {
                   "params": [
-                    "null"
+                    "linear"
                   ],
                   "type": "fill"
                 }
@@ -392,11 +417,11 @@
                   },
                   {
                     "params": [],
-                    "type": "mean"
+                    "type": "sum"
                   },
                   {
                     "params": [
-                      "*0.001"
+                      "* $pulse_rate * $day_rate"
                     ],
                     "type": "math"
                   }
@@ -405,8 +430,8 @@
               "tags": [
                 {
                   "key": "topic",
-                  "operator": "=",
-                  "value": "tele/electricity/adu/"
+                  "operator": "=~",
+                  "value": "/^$mqtt_topic$/"
                 }
               ]
             }
@@ -414,8 +439,8 @@
           "thresholds": "",
           "timeFrom": "1m",
           "timeShift": null,
-          "title": "Current (per minute)",
-          "transparent": false,
+          "title": "Usage over last minute",
+          "transparent": true,
           "type": "singlestat",
           "valueFontSize": "70%",
           "valueMaps": [
@@ -426,6 +451,130 @@
             }
           ],
           "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "#d44a3a",
+            "rgba(237, 129, 40, 0.89)",
+            "#299c46"
+          ],
+          "datasource": "${DS_INFLUXDB}",
+          "decimals": 2,
+          "description": "Select a time interval from the top right corner of the screen",
+          "format": "currencyEUR",
+          "gauge": {
+            "maxValue": 1,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": true,
+            "thresholdMarkers": true
+          },
+          "hideTimeOverride": false,
+          "id": 7,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 3,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "sum",
+          "targets": [
+            {
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "linear"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "mqtt_consumer",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "Pulses"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "sum"
+                  },
+                  {
+                    "params": [
+                      "*$day_rate * $pulse_rate"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "topic",
+                  "operator": "=~",
+                  "value": "/^$mqtt_topic$/"
+                }
+              ]
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Usage over selected time interval",
+          "transparent": true,
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "total"
         }
       ],
       "repeat": null,
@@ -437,7 +586,7 @@
     },
     {
       "collapse": false,
-      "height": 344,
+      "height": 238,
       "panels": [
         {
           "aliasColors": {},
@@ -446,7 +595,7 @@
           "dashes": false,
           "datasource": "${DS_INFLUXDB}",
           "fill": 1,
-          "id": 1,
+          "id": 8,
           "legend": {
             "avg": true,
             "current": false,
@@ -482,7 +631,7 @@
                 },
                 {
                   "params": [
-                    "linear"
+                    "null"
                   ],
                   "type": "fill"
                 }
@@ -503,11 +652,11 @@
                   },
                   {
                     "params": [],
-                    "type": "mean"
+                    "type": "sum"
                   },
                   {
                     "params": [
-                      "*0.001"
+                      "*$pulse_rate * $day_rate"
                     ],
                     "type": "math"
                   }
@@ -516,8 +665,8 @@
               "tags": [
                 {
                   "key": "topic",
-                  "operator": "=",
-                  "value": "tele/electricity/adu/"
+                  "operator": "=~",
+                  "value": "/^$mqtt_topic$/"
                 }
               ]
             }
@@ -525,12 +674,13 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Electricity use over time",
+          "title": "Electricity usage per minute",
           "tooltip": {
             "shared": true,
             "sort": 0,
             "value_type": "individual"
           },
+          "transparent": true,
           "type": "graph",
           "xaxis": {
             "buckets": null,
@@ -541,7 +691,7 @@
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "currencyEUR",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -568,26 +718,26 @@
     },
     {
       "collapse": false,
-      "height": 250,
+      "height": 256,
       "panels": [
         {
           "aliasColors": {},
-          "bars": true,
+          "bars": false,
           "dashLength": 10,
           "dashes": false,
           "datasource": "${DS_INFLUXDB}",
           "fill": 1,
-          "id": 5,
+          "id": 1,
           "legend": {
             "avg": true,
             "current": false,
             "max": false,
             "min": false,
-            "show": false,
+            "show": true,
             "total": false,
             "values": true
           },
-          "lines": false,
+          "lines": true,
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
@@ -597,7 +747,7 @@
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
-          "span": 12,
+          "span": 6,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -607,13 +757,13 @@
               "groupBy": [
                 {
                   "params": [
-                    "1m"
+                    "1h"
                   ],
                   "type": "time"
                 },
                 {
                   "params": [
-                    "linear"
+                    "null"
                   ],
                   "type": "fill"
                 }
@@ -621,7 +771,7 @@
               "hide": false,
               "measurement": "mqtt_consumer",
               "orderByTime": "ASC",
-              "policy": "default",
+              "policy": "autogen",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -634,11 +784,11 @@
                   },
                   {
                     "params": [],
-                    "type": "mean"
+                    "type": "sum"
                   },
                   {
                     "params": [
-                      "*0.001"
+                      "*$pulse_rate * $day_rate"
                     ],
                     "type": "math"
                   }
@@ -647,8 +797,8 @@
               "tags": [
                 {
                   "key": "topic",
-                  "operator": "=",
-                  "value": "tele/electricity/adu/"
+                  "operator": "=~",
+                  "value": "/^$mqtt_topic$/"
                 }
               ]
             }
@@ -656,23 +806,24 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Electricity histogram",
+          "title": "Electricity usage per hour",
           "tooltip": {
-            "shared": false,
+            "shared": true,
             "sort": 0,
             "value_type": "individual"
           },
+          "transparent": true,
           "type": "graph",
           "xaxis": {
             "buckets": null,
-            "mode": "histogram",
+            "mode": "time",
             "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "currencyEUR",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -688,19 +839,129 @@
               "show": true
             }
           ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_INFLUXDB}",
+          "fill": 1,
+          "id": 9,
+          "legend": {
+            "avg": true,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "alias": "time series",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "1d"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "hide": false,
+              "measurement": "mqtt_consumer",
+              "orderByTime": "ASC",
+              "policy": "autogen",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "Pulses"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "sum"
+                  },
+                  {
+                    "params": [
+                      "*$pulse_rate * $day_rate"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "topic",
+                  "operator": "=~",
+                  "value": "/^$mqtt_topic$/"
+                }
+              ]
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": "7d",
+          "timeShift": null,
+          "title": "Electricity usage per day",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "transparent": true,
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "currencyEUR",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
         }
       ],
-      "repeat": null,
-      "repeatIteration": null,
-      "repeatRowId": null,
-      "showTitle": false,
-      "title": "Dashboard Row",
-      "titleSize": "h6"
-    },
-    {
-      "collapse": false,
-      "height": 250,
-      "panels": [],
       "repeat": null,
       "repeatIteration": null,
       "repeatRowId": null,
@@ -713,10 +974,62 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "value": "${VAR_MQTT_TOPIC}",
+          "text": "${VAR_MQTT_TOPIC}"
+        },
+        "hide": 0,
+        "label": null,
+        "name": "mqtt_topic",
+        "options": [
+          {
+            "value": "${VAR_MQTT_TOPIC}",
+            "text": "${VAR_MQTT_TOPIC}"
+          }
+        ],
+        "query": "${VAR_MQTT_TOPIC}",
+        "type": "constant"
+      },
+      {
+        "current": {
+          "value": "${VAR_DAY_RATE}",
+          "text": "${VAR_DAY_RATE}"
+        },
+        "hide": 0,
+        "label": null,
+        "name": "day_rate",
+        "options": [
+          {
+            "value": "${VAR_DAY_RATE}",
+            "text": "${VAR_DAY_RATE}"
+          }
+        ],
+        "query": "${VAR_DAY_RATE}",
+        "type": "constant"
+      },
+      {
+        "current": {
+          "value": "${VAR_PULSE_RATE}",
+          "text": "${VAR_PULSE_RATE}"
+        },
+        "hide": 0,
+        "label": null,
+        "name": "pulse_rate",
+        "options": [
+          {
+            "value": "${VAR_PULSE_RATE}",
+            "text": "${VAR_PULSE_RATE}"
+          }
+        ],
+        "query": "${VAR_PULSE_RATE}",
+        "type": "constant"
+      }
+    ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now/d",
     "to": "now"
   },
   "timepicker": {
@@ -746,5 +1059,5 @@
   },
   "timezone": "",
   "title": "Electricity",
-  "version": 3
+  "version": 17
 }
