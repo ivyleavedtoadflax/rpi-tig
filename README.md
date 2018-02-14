@@ -18,6 +18,7 @@
 * Set the following env vars:
 
 |Container|Variable|Description|
+|---|---|---|
 |telegraf|MQTT_HOST|Local IP address, assuming you are running the mqtt broker locally (e.g. 192.168.1.177)|
 |telegraf|MQTT_PORT|Typically 1883|
 |telegraf|MQTT_TOPIC|Topic to look for messages (currently just one)|
@@ -26,6 +27,7 @@
 |telegraf|DATABASE|Influxb database in which to store mqtt messages|
 |telegraf|INFLUXDB_HOST|Typically local IP, assuming that the influxdb database is being run locally|
 |telegraf|INFLUXDB_PORT|Typically 8086|
+
 * Create `sudo makdir /data` to create a directory to be used for volume storage.
 * Run `Make all`.
 * To stop and remove containers run `Make clean`
