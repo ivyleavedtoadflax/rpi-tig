@@ -28,6 +28,7 @@ telegraf:
 	sudo docker run \
 	-d --restart unless-stopped \
 	-v $(PWD)/telegraf.conf:/etc/telegraf/telegraf.conf:ro \
+	-v /data/speedtest:/data/speedtest \
 	--name telegraf \
 	-it telegraf:latest
 
