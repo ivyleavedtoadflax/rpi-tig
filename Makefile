@@ -35,6 +35,7 @@ telegraf:
 influxdb:
 	sudo docker run \
 	-v /data/influxdb:/var/lib/influxdb \
+	-v /data/influxdb/backup:/data/influxdb/backup \
 	-d --restart unless-stopped \
 	-p 8086:8086 --name influxdb \
 	-it influxdb:latest
