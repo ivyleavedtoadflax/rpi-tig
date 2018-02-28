@@ -26,7 +26,12 @@
 |telegraf|MQTT_PASSWORD|Password required by the broker|
 |telegraf|DATABASE|Influxb database in which to store mqtt messages|
 |telegraf|INFLUXDB_HOST|Typically local IP, assuming that the influxdb database is being run locally|
-|telegraf|INFLUXDB_PORT|Typically 8086|
+|telegraf|WEATHER_DATABASE|Tpically `weather`|
+|telegraf|WEATHER_INTERVAL|Interval to poll the API: 10m|
+|telegraf|API_ENDPOINT|http://api.openweathermap.org/data/2.5/weather|
+|telegraf|API_KEY|API key for weather API. Available frm openweathermap.org|
+|telegraf|LAT|Latitude for weather measurements|
+|telegraf|LON|Longitude for weather measurements|
 
 * Create `sudo mkdir /data` to create a directory to be used for volume storage.
 * Run `make all`.
