@@ -82,7 +82,8 @@ nuke_data:
 
 test_mqtt:
 	mosquitto_sub -h $(MQTT_HOST)  -p $(MQTT_PORT) \
-	-u $(MQTT_USERNAME) -P $(MQTT_PASSWORD) -t '#' 
+	-u $(MQTT_USERNAME) -t "#"
+	#-P $(MQTT_PASSWORD) -t '#' 
 
 influxdb_latest:
 	sudo docker exec -it influxdb influx \
