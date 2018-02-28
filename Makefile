@@ -1,7 +1,7 @@
 PWD = $(shell pwd)
 GRAFANA_VERSION=3.1.1
 
-all: telegraf.conf mqtt influxdb telegraf grafana
+all: telegraf.conf telegraf weather.conf weather mqtt influxdb grafana
 nuke: clean_docker nuke_data
 
 telegraf.conf: telegraf.template.conf .envrc
@@ -17,7 +17,7 @@ telegraf.conf: telegraf.template.conf .envrc
 	telegraf.template.conf > telegraf.conf
 
 weather.conf: weather.template.conf .envrc
-        echo "Creating weather.conf file"; \
+	echo "Creating weather.conf file"; \
         sed -e "s/\$${WEATHER_DATABASE}/$(WEATHER_DATABASE)/" \
         -e "s%\$${INFLUXDB_HOST}%$(INFLUXDB_HOST)%" \
         -e "s/\$${INFLUXDB_PORT}/$(INFLUXDB_PORT)/" \
@@ -50,6 +50,7 @@ weather:
         -v $(PWD)/weather.conf:/etc/telegraf/telegraf.conf:ro \
         --name weather \
         -it telegraf:latest
+
 influxdb:
 	sudo docker run \
 	-v /data/influxdb:/var/lib/influxdb \
