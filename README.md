@@ -36,3 +36,33 @@
 * Create `sudo mkdir /data` to create a directory to be used for volume storage.
 * Run `make all`.
 * To stop and remove containers run `make clean`
+
+## Speedtest
+
+Monitoring internet connection speed is handled with the rpi-speedtest-cli image.
+A cronjob calls this container at a set interval, and logs the output to json. This json is then read by telegraf using the tail plugin. In order to read this file, an appropriate volume must be mounted to allow the telegraf to read it from the host file system:
+
+```{make}
+telegraf:
+	sudo docker run \
+	-d --restart unless-stopped \
+	-v $(PWD)/telegraf.conf:/etc/telegraf/telegraf.conf:ro \
+	-v /data/speedtest:/data/speedtest \
+	--name telegraf \
+	-it telegraf:latest
+```
+
+The following cronjob runs the task every 5 minutes:
+
+```{bash}
+*/5 * * * * sudo docker run rpi-speedtest-cli --json >> /data/speedtest/speedtest.json
+```
+
+## Backing up the data
+
+Backup jobs are run on the influx database using a cronjob which calls the `influxd backup` command. An appropriate volume must again be specified when creating the influxdb container.
+
+```
+* * */5 * * sudo docker exec -it influxdb influxd backup -database telegraf /data/influxdb/backup
+```
+
