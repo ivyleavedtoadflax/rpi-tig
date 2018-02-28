@@ -41,7 +41,7 @@
     {
       "collapse": false,
       "editable": true,
-      "height": "350px",
+      "height": "250px",
       "panels": [
         {
           "aliasColors": {},
@@ -81,6 +81,7 @@
           "steppedLine": false,
           "targets": [
             {
+              "alias": "mean",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -120,10 +121,10 @@
                   "operator": "=",
                   "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
                 }
-              ],
-              "alias": "mean"
+              ]
             },
             {
+              "alias": "min",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -139,6 +140,7 @@
                   "type": "fill"
                 }
               ],
+              "hide": true,
               "measurement": "httpjson",
               "policy": "autogen",
               "refId": "B",
@@ -163,10 +165,10 @@
                   "operator": "=",
                   "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
                 }
-              ],
-              "alias": "min"
+              ]
             },
             {
+              "alias": "max",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -182,6 +184,7 @@
                   "type": "fill"
                 }
               ],
+              "hide": true,
               "measurement": "httpjson",
               "policy": "autogen",
               "refId": "C",
@@ -206,8 +209,7 @@
                   "operator": "=",
                   "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
                 }
-              ],
-              "alias": "max"
+              ]
             }
           ],
           "timeFrom": null,
@@ -244,10 +246,244 @@
         }
       ],
       "title": "Temperature"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "${DS_WEATHER}",
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 2,
+          "isNew": true,
+          "legend": {
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "alias": "wind speed",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "autogen",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "wind_speed"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Wind speed",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "show": true
+          },
+          "yaxes": [
+            {
+              "format": "velocitykmh",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "${DS_WEATHER}",
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 3,
+          "isNew": true,
+          "legend": {
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "alias": "wind speed",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "autogen",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "main_humidity"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Humidity",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "show": true
+          },
+          "yaxes": [
+            {
+              "format": "percent",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "title": "New row"
     }
   ],
   "time": {
-    "from": "now-30m",
+    "from": "now/d",
     "to": "now"
   },
   "timepicker": {
@@ -282,7 +518,7 @@
     "list": []
   },
   "schemaVersion": 12,
-  "version": 3,
+  "version": 5,
   "links": [],
   "gnetId": null
 }
