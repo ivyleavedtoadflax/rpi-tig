@@ -364,7 +364,15 @@
               "show": true
             }
           ]
-        },
+        }
+      ],
+      "title": "New row"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
         {
           "aliasColors": {},
           "bars": false,
@@ -464,7 +472,7 @@
               "format": "percent",
               "label": null,
               "logBase": 1,
-              "max": null,
+              "max": 100,
               "min": null,
               "show": true
             },
@@ -483,7 +491,7 @@
     }
   ],
   "time": {
-    "from": "now/d",
+    "from": "now/w",
     "to": "now"
   },
   "timepicker": {
@@ -518,7 +526,7 @@
     "list": []
   },
   "schemaVersion": 12,
-  "version": 5,
+  "version": 9,
   "links": [],
   "gnetId": null
 }
