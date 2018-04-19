@@ -1,16 +1,8 @@
 {
   "__inputs": [
     {
-      "name": "DS_--_MIXED --",
-      "label": "-- Mixed --",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "mixed",
-      "pluginName": "Mixed datasource"
-    },
-    {
-      "name": "DS_WEATHER",
-      "label": "weather",
+      "name": "DS_XPS",
+      "label": "xps",
       "description": "",
       "type": "datasource",
       "pluginId": "influxdb",
@@ -32,19 +24,13 @@
     },
     {
       "type": "datasource",
-      "id": "mixed",
-      "name": "Mixed datasource",
-      "version": "1.0.0"
-    },
-    {
-      "type": "datasource",
       "id": "influxdb",
       "name": "InfluxDB",
       "version": "1.0.0"
     }
   ],
   "id": null,
-  "title": "Weather",
+  "title": "XPS",
   "tags": [],
   "style": "dark",
   "timezone": "browser",
@@ -60,27 +46,26 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": "${DS_--_MIXED --}",
+          "datasource": "${DS_XPS}",
           "editable": true,
           "error": false,
-          "fill": 1,
+          "fill": 0,
           "grid": {
             "threshold1": null,
             "threshold1Color": "rgba(216, 200, 27, 0.27)",
             "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)",
-            "thresholdLine": false
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
           },
           "id": 1,
           "isNew": true,
           "legend": {
-            "avg": true,
-            "current": true,
+            "avg": false,
+            "current": false,
             "max": false,
             "min": false,
             "show": true,
             "total": false,
-            "values": true
+            "values": false
           },
           "lines": true,
           "linewidth": 2,
@@ -90,24 +75,13 @@
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
-          "seriesOverrides": [
-            {
-              "alias": "Sun altitude",
-              "color": "#C15C17",
-              "fill": 0,
-              "fillBelowTo": "mean",
-              "linewidth": 1,
-              "yaxis": 2,
-              "zindex": -3
-            }
-          ],
+          "seriesOverrides": [],
           "span": 12,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
-              "alias": "mean",
-              "datasource": "weather",
+              "alias": "CPU 0",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -123,15 +97,15 @@
                   "type": "fill"
                 }
               ],
-              "measurement": "httpjson",
-              "policy": "autogen",
+              "measurement": "cpu",
+              "policy": "xps",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
                 [
                   {
                     "params": [
-                      "main_temp"
+                      "usage_user"
                     ],
                     "type": "field"
                   },
@@ -143,98 +117,57 @@
               ],
               "tags": [
                 {
-                  "key": "server",
+                  "key": "cpu",
                   "operator": "=",
-                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                  "value": "cpu0"
                 }
               ]
             },
             {
-              "datasource": "sunandmoon",
+              "alias": "CPU 1",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "cpu",
+              "policy": "xps",
               "refId": "B",
-              "target": "sun_altitude"
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Temperature",
-          "tooltip": {
-            "msResolution": true,
-            "shared": true,
-            "sort": 0,
-            "value_type": "cumulative"
-          },
-          "type": "graph",
-          "xaxis": {
-            "show": true
-          },
-          "yaxes": [
-            {
-              "format": "celsius",
-              "label": "",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "usage_user"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "cpu",
+                  "operator": "=",
+                  "value": "cpu1"
+                }
+              ]
             },
             {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": false
-            }
-          ]
-        }
-      ],
-      "title": "Temperature"
-    },
-    {
-      "collapse": false,
-      "editable": true,
-      "height": "250px",
-      "panels": [
-        {
-          "aliasColors": {},
-          "bars": false,
-          "datasource": "${DS_--_MIXED --}",
-          "editable": true,
-          "error": false,
-          "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "id": 2,
-          "isNew": true,
-          "legend": {
-            "avg": true,
-            "current": true,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 12,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "alias": "wind speed",
-              "datasource": "weather",
+              "alias": "CPU 2",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -250,15 +183,15 @@
                   "type": "fill"
                 }
               ],
-              "measurement": "httpjson",
-              "policy": "autogen",
-              "refId": "A",
+              "measurement": "cpu",
+              "policy": "xps",
+              "refId": "C",
               "resultFormat": "time_series",
               "select": [
                 [
                   {
                     "params": [
-                      "wind_speed"
+                      "usage_user"
                     ],
                     "type": "field"
                   },
@@ -270,92 +203,14 @@
               ],
               "tags": [
                 {
-                  "key": "server",
+                  "key": "cpu",
                   "operator": "=",
-                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                  "value": "cpu2"
                 }
               ]
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Wind speed",
-          "tooltip": {
-            "msResolution": true,
-            "shared": true,
-            "sort": 0,
-            "value_type": "cumulative"
-          },
-          "type": "graph",
-          "xaxis": {
-            "show": true
-          },
-          "yaxes": [
-            {
-              "format": "velocitykmh",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
             },
             {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        }
-      ],
-      "title": "New row"
-    },
-    {
-      "collapse": false,
-      "editable": true,
-      "height": "250px",
-      "panels": [
-        {
-          "aliasColors": {},
-          "bars": false,
-          "datasource": "${DS_WEATHER}",
-          "editable": true,
-          "error": false,
-          "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "id": 3,
-          "isNew": true,
-          "legend": {
-            "avg": true,
-            "current": true,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 12,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "alias": "wind speed",
+              "alias": "CPU 3",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -371,15 +226,15 @@
                   "type": "fill"
                 }
               ],
-              "measurement": "httpjson",
-              "policy": "autogen",
-              "refId": "A",
+              "measurement": "cpu",
+              "policy": "xps",
+              "refId": "D",
               "resultFormat": "time_series",
               "select": [
                 [
                   {
                     "params": [
-                      "main_humidity"
+                      "usage_user"
                     ],
                     "type": "field"
                   },
@@ -391,18 +246,18 @@
               ],
               "tags": [
                 {
-                  "key": "server",
+                  "key": "cpu",
                   "operator": "=",
-                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                  "value": "cpu3"
                 }
               ]
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Humidity",
+          "title": "CPU total",
           "tooltip": {
-            "msResolution": false,
+            "msResolution": true,
             "shared": true,
             "sort": 0,
             "value_type": "cumulative"
@@ -416,7 +271,122 @@
               "format": "percent",
               "label": null,
               "logBase": 1,
-              "max": 100,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "title": "Row"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "${DS_XPS}",
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 2,
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "alias": "RAM utilised",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "mem",
+              "policy": "xps",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "used"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "RAM utilisation",
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "show": true
+          },
+          "yaxes": [
+            {
+              "format": "bits",
+              "label": null,
+              "logBase": 1,
+              "max": null,
               "min": null,
               "show": true
             },
@@ -441,28 +411,26 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": "${DS_WEATHER}",
+          "datasource": "${DS_XPS}",
           "editable": true,
           "error": false,
-          "fill": 1,
+          "fill": 0,
           "grid": {
             "threshold1": null,
             "threshold1Color": "rgba(216, 200, 27, 0.27)",
             "threshold2": null,
             "threshold2Color": "rgba(234, 112, 112, 0.22)"
           },
-          "id": 4,
+          "id": 3,
           "isNew": true,
           "legend": {
-            "alignAsTable": false,
-            "avg": true,
-            "current": true,
+            "avg": false,
+            "current": false,
             "max": false,
             "min": false,
-            "rightSide": false,
             "show": true,
             "total": false,
-            "values": true
+            "values": false
           },
           "lines": true,
           "linewidth": 2,
@@ -478,7 +446,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "3 hour rainfall",
+              "alias": "writes",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -494,15 +462,15 @@
                   "type": "fill"
                 }
               ],
-              "measurement": "httpjson",
-              "policy": "autogen",
+              "measurement": "diskio",
+              "policy": "xps",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
                 [
                   {
                     "params": [
-                      "rain_3h"
+                      "writes"
                     ],
                     "type": "field"
                   },
@@ -512,20 +480,51 @@
                   }
                 ]
               ],
-              "tags": [
+              "tags": []
+            },
+            {
+              "alias": "reads",
+              "dsType": "influxdb",
+              "groupBy": [
                 {
-                  "key": "server",
-                  "operator": "=",
-                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
                 }
-              ]
+              ],
+              "measurement": "diskio",
+              "policy": "xps",
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "reads"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "3h rainfall",
+          "title": "Disk IO",
           "tooltip": {
-            "msResolution": false,
+            "msResolution": true,
             "shared": true,
             "sort": 0,
             "value_type": "cumulative"
@@ -536,7 +535,159 @@
           },
           "yaxes": [
             {
-              "format": "lengthmm",
+              "format": "bits",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "title": "New row"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "${DS_XPS}",
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 4,
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "alias": "received",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "net",
+              "policy": "xps",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "bytes_recv"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            },
+            {
+              "alias": "sent",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "net",
+              "policy": "xps",
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "bytes_sent"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Network IO",
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "show": true
+          },
+          "yaxes": [
+            {
+              "format": "bits",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -558,7 +709,7 @@
     }
   ],
   "time": {
-    "from": "now-7d",
+    "from": "now-45m",
     "to": "now"
   },
   "timepicker": {
@@ -592,9 +743,9 @@
   "annotations": {
     "list": []
   },
-  "refresh": "15m",
+  "refresh": "1m",
   "schemaVersion": 12,
-  "version": 25,
+  "version": 8,
   "links": [],
   "gnetId": null
 }

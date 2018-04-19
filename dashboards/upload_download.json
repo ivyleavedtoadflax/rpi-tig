@@ -534,6 +534,49 @@
                   "value": "192.168.1.1"
                 }
               ]
+            },
+            {
+              "alias": "elec.local",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "5m"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "ping",
+              "policy": "default",
+              "refId": "C",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "average_response_ms"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "url",
+                  "operator": "=",
+                  "value": "192.168.1.10"
+                }
+              ]
             }
           ],
           "timeFrom": null,
@@ -837,6 +880,49 @@
                   "value": "192.168.1.1"
                 }
               ]
+            },
+            {
+              "alias": "elec.local",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "1h"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "ping",
+              "policy": "default",
+              "refId": "C",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "average_response_ms"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "url",
+                  "operator": "=",
+                  "value": "192.168.1.10"
+                }
+              ]
             }
           ],
           "timeFrom": null,
@@ -992,7 +1078,7 @@
               "tags": []
             }
           ],
-          "timeFrom": "7d",
+          "timeFrom": "30d",
           "timeShift": null,
           "title": "Upload/Download speed",
           "tooltip": {
@@ -1140,9 +1226,52 @@
                   "value": "192.168.1.1"
                 }
               ]
+            },
+            {
+              "alias": "elec.local",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "1d"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "ping",
+              "policy": "default",
+              "refId": "C",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "average_response_ms"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "url",
+                  "operator": "=",
+                  "value": "192.168.1.10"
+                }
+              ]
             }
           ],
-          "timeFrom": "7d",
+          "timeFrom": "30d",
           "timeShift": null,
           "title": "Ping",
           "tooltip": {
@@ -1179,7 +1308,7 @@
     }
   ],
   "time": {
-    "from": "now/w",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {
@@ -1215,7 +1344,7 @@
   },
   "refresh": false,
   "schemaVersion": 12,
-  "version": 22,
+  "version": 26,
   "links": [],
   "gnetId": null
 }
