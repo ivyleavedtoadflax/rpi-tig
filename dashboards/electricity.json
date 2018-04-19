@@ -157,7 +157,7 @@
                   "type": "fill"
                 }
               ],
-              "measurement": "mqtt_consumer",
+              "measurement": "tail",
               "orderByTime": "ASC",
               "policy": "default",
               "refId": "A",
@@ -184,9 +184,9 @@
               ],
               "tags": [
                 {
-                  "key": "topic",
-                  "operator": "=~",
-                  "value": "/^$mqtt_topic$/"
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
                 }
               ]
             }
@@ -281,7 +281,7 @@
                 }
               ],
               "hide": false,
-              "measurement": "mqtt_consumer",
+              "measurement": "tail",
               "orderByTime": "ASC",
               "policy": "default",
               "refId": "A",
@@ -308,9 +308,9 @@
               ],
               "tags": [
                 {
-                  "key": "topic",
-                  "operator": "=~",
-                  "value": "/^$mqtt_topic$/"
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
                 }
               ]
             }
@@ -405,7 +405,7 @@
                   "type": "fill"
                 }
               ],
-              "measurement": "mqtt_consumer",
+              "measurement": "tail",
               "orderByTime": "ASC",
               "policy": "default",
               "refId": "A",
@@ -432,9 +432,9 @@
               ],
               "tags": [
                 {
-                  "key": "topic",
-                  "operator": "=~",
-                  "value": "/^$mqtt_topic$/"
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
                 }
               ]
             }
@@ -671,7 +671,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_--_MIXED --}",
+          "datasource": "${DS_INFLUXDB}",
           "fill": 1,
           "grid": {
             "threshold1": null,
@@ -712,7 +712,6 @@
           "targets": [
             {
               "alias": "time series",
-              "datasource": "InfluxDB",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -759,6 +758,55 @@
                   "key": "topic",
                   "operator": "=~",
                   "value": "/^$mqtt_topic$/"
+                }
+              ]
+            },
+            {
+              "alias": "time series (tail)",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "1h"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "tail",
+              "policy": "autogen",
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "Pulses"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "sum"
+                  },
+                  {
+                    "params": [
+                      "*$pulse_rate*$day_rate"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
                 }
               ]
             }
@@ -940,6 +988,56 @@
                   "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
                 }
               ]
+            },
+            {
+              "alias": "Electricity (tail)",
+              "datasource": "InfluxDB",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "1d"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "tail",
+              "policy": "default",
+              "refId": "C",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "Pulses"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "sum"
+                  },
+                  {
+                    "params": [
+                      "*$pulse_rate*$day_rate"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
+                }
+              ]
             }
           ],
           "thresholds": [],
@@ -1079,7 +1177,7 @@
   },
   "refresh": "5m",
   "schemaVersion": 12,
-  "version": 38,
+  "version": 40,
   "links": [],
   "gnetId": null
 }
