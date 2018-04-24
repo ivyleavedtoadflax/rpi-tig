@@ -9,6 +9,14 @@
       "pluginName": "InfluxDB"
     },
     {
+      "name": "DS_--_MIXED --",
+      "label": "-- Mixed --",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "mixed",
+      "pluginName": "Mixed datasource"
+    },
+    {
       "name": "VAR_MQTT_TOPIC",
       "type": "constant",
       "label": "mqtt_topic",
@@ -54,6 +62,12 @@
       "id": "influxdb",
       "name": "InfluxDB",
       "version": "1.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "mixed",
+      "name": "Mixed datasource",
+      "version": "1.0.0"
     }
   ],
   "id": null,
@@ -83,7 +97,7 @@
           "decimals": 2,
           "format": "currencyEUR",
           "gauge": {
-            "maxValue": 3.5,
+            "maxValue": 1.5,
             "minValue": 0,
             "show": true,
             "thresholdLabels": true,
@@ -143,7 +157,7 @@
                   "type": "fill"
                 }
               ],
-              "measurement": "mqtt_consumer",
+              "measurement": "tail",
               "orderByTime": "ASC",
               "policy": "default",
               "refId": "A",
@@ -170,9 +184,9 @@
               ],
               "tags": [
                 {
-                  "key": "topic",
-                  "operator": "=~",
-                  "value": "/^$mqtt_topic$/"
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
                 }
               ]
             }
@@ -206,7 +220,7 @@
           "decimals": 2,
           "format": "currencyEUR",
           "gauge": {
-            "maxValue": 1,
+            "maxValue": 0.36,
             "minValue": 0,
             "show": true,
             "thresholdLabels": true,
@@ -267,7 +281,7 @@
                 }
               ],
               "hide": false,
-              "measurement": "mqtt_consumer",
+              "measurement": "tail",
               "orderByTime": "ASC",
               "policy": "default",
               "refId": "A",
@@ -294,9 +308,9 @@
               ],
               "tags": [
                 {
-                  "key": "topic",
-                  "operator": "=~",
-                  "value": "/^$mqtt_topic$/"
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
                 }
               ]
             }
@@ -391,7 +405,7 @@
                   "type": "fill"
                 }
               ],
-              "measurement": "mqtt_consumer",
+              "measurement": "tail",
               "orderByTime": "ASC",
               "policy": "default",
               "refId": "A",
@@ -418,9 +432,9 @@
               ],
               "tags": [
                 {
-                  "key": "topic",
-                  "operator": "=~",
-                  "value": "/^$mqtt_topic$/"
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
                 }
               ]
             }
@@ -459,7 +473,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_INFLUXDB}",
+          "datasource": "${DS_--_MIXED --}",
           "fill": 1,
           "grid": {
             "threshold1": null,
@@ -482,10 +496,17 @@
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
-          "pointradius": 5,
+          "pointradius": 1,
           "points": false,
           "renderer": "flot",
-          "seriesOverrides": [],
+          "seriesOverrides": [
+            {
+              "alias": "Sun altitude",
+              "fill": 0,
+              "yaxis": 2,
+              "zindex": -3
+            }
+          ],
           "spaceLength": 10,
           "span": 12,
           "stack": false,
@@ -493,6 +514,7 @@
           "targets": [
             {
               "alias": "time series",
+              "datasource": "InfluxDB",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -541,6 +563,56 @@
                   "value": "/^$mqtt_topic$/"
                 }
               ]
+            },
+            {
+              "alias": "time series (tail)",
+              "datasource": "InfluxDB",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "1m"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "tail",
+              "policy": "default",
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "Pulses"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "sum"
+                  },
+                  {
+                    "params": [
+                      "*$pulse_rate*$day_rate"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
+                }
+              ]
             }
           ],
           "thresholds": [],
@@ -548,7 +620,7 @@
           "timeShift": null,
           "title": "Electricity usage per minute",
           "tooltip": {
-            "msResolution": false,
+            "msResolution": true,
             "shared": true,
             "sort": 0,
             "value_type": "individual"
@@ -577,7 +649,7 @@
               "logBase": 1,
               "max": null,
               "min": null,
-              "show": true
+              "show": false
             }
           ]
         }
@@ -622,10 +694,17 @@
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
-          "pointradius": 5,
-          "points": false,
+          "pointradius": 1,
+          "points": true,
           "renderer": "flot",
-          "seriesOverrides": [],
+          "seriesOverrides": [
+            {
+              "alias": "Temperature",
+              "fill": 0,
+              "points": false,
+              "yaxis": 2
+            }
+          ],
           "spaceLength": 10,
           "span": 6,
           "stack": false,
@@ -681,6 +760,55 @@
                   "value": "/^$mqtt_topic$/"
                 }
               ]
+            },
+            {
+              "alias": "time series (tail)",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "1h"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "tail",
+              "policy": "autogen",
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "Pulses"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "sum"
+                  },
+                  {
+                    "params": [
+                      "*$pulse_rate*$day_rate"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
+                }
+              ]
             }
           ],
           "thresholds": [],
@@ -688,7 +816,7 @@
           "timeShift": null,
           "title": "Electricity usage per hour",
           "tooltip": {
-            "msResolution": false,
+            "msResolution": true,
             "shared": true,
             "sort": 0,
             "value_type": "individual"
@@ -712,7 +840,7 @@
               "show": true
             },
             {
-              "format": "short",
+              "format": "celsius",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -726,7 +854,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_INFLUXDB}",
+          "datasource": "${DS_--_MIXED --}",
           "fill": 1,
           "grid": {
             "threshold1": null,
@@ -749,17 +877,25 @@
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
-          "pointradius": 5,
-          "points": false,
+          "pointradius": 1,
+          "points": true,
           "renderer": "flot",
-          "seriesOverrides": [],
+          "seriesOverrides": [
+            {
+              "alias": "Temperature",
+              "fill": 0,
+              "yaxis": 2,
+              "zindex": -3
+            }
+          ],
           "spaceLength": 10,
           "span": 6,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
-              "alias": "time series",
+              "alias": "Electricity",
+              "datasource": "InfluxDB",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -808,10 +944,104 @@
                   "value": "/^$mqtt_topic$/"
                 }
               ]
+            },
+            {
+              "alias": "Temperature",
+              "datasource": "weather",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "1d"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "autogen",
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "main_temp"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "median"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
+            },
+            {
+              "alias": "Electricity (tail)",
+              "datasource": "InfluxDB",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "1d"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "tail",
+              "policy": "default",
+              "refId": "C",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "Pulses"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "sum"
+                  },
+                  {
+                    "params": [
+                      "*$pulse_rate*$day_rate"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
+                }
+              ]
             }
           ],
           "thresholds": [],
-          "timeFrom": "7d",
+          "timeFrom": "30d",
           "timeShift": null,
           "title": "Electricity usage per day",
           "tooltip": {
@@ -840,11 +1070,11 @@
             },
             {
               "decimals": null,
-              "format": "short",
-              "label": null,
+              "format": "celsius",
+              "label": "temperature",
               "logBase": 1,
               "max": null,
-              "min": null,
+              "min": 0,
               "show": true
             }
           ]
@@ -859,7 +1089,7 @@
     }
   ],
   "time": {
-    "from": "now/d",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -947,7 +1177,7 @@
   },
   "refresh": "5m",
   "schemaVersion": 12,
-  "version": 13,
+  "version": 40,
   "links": [],
   "gnetId": null
 }
