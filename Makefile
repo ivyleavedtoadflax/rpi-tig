@@ -4,7 +4,7 @@ GRAFANA_VERSION=3.1.1
 all: telegraf.conf telegraf weather.conf weather mqtt influxdb grafana
 nuke: clean_docker nuke_data
 
-telegraf.conf: telegraf.template.conf .envrc
+telegraf.conf: telegraf.template.conf .envrc Makefile
 	echo "Creating telegraf.conf file"; \
 	sed -e "s%\$${MQTT_HOST}%$(MQTT_HOST)%" \
 	-e "s/\$${MQTT_PORT}/$(MQTT_PORT)/" \
@@ -16,7 +16,7 @@ telegraf.conf: telegraf.template.conf .envrc
 	-e "s/\$${INFLUXDB_PORT}/$(INFLUXDB_PORT)/" \
 	telegraf.template.conf > telegraf.conf
 
-weather.conf: weather.template.conf .envrc
+weather.conf: weather.template.conf .envrc Makefile
 	echo "Creating weather.conf file"; \
         sed -e "s/\$${WEATHER_DATABASE}/$(WEATHER_DATABASE)/" \
         -e "s%\$${INFLUXDB_HOST}%$(INFLUXDB_HOST)%" \
