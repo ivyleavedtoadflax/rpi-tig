@@ -15,6 +15,8 @@ telegraf.conf: telegraf.template.conf .envrc Makefile
 	-e "s/\$${DATABASE}/$(DATABASE)/" \
 	-e "s%\$${INFLUXDB_HOST}%$(INFLUXDB_HOST)%" \
 	-e "s/\$${INFLUXDB_PORT}/$(INFLUXDB_PORT)/" \
+	-e "s/\$${ROUTER_IP}/$(ROUTER_IP)/" \
+	-e "s/\$${ELEC_LOCAL_IP}/$(ELEC_LOCAL_IP)/" \
 	telegraf.template.conf > telegraf.conf
 
 weather.conf: weather.template.conf .envrc Makefile
