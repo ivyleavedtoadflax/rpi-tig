@@ -7,6 +7,13 @@
       "type": "datasource",
       "pluginId": "influxdb",
       "pluginName": "InfluxDB"
+    },
+    {
+      "name": "VAR_ELECLOCALIP",
+      "type": "constant",
+      "label": "elec.local IP",
+      "value": "192.168.1.21",
+      "description": ""
     }
   ],
   "__requires": [
@@ -573,8 +580,8 @@
               "tags": [
                 {
                   "key": "url",
-                  "operator": "=",
-                  "value": "192.168.1.10"
+                  "operator": "=~",
+                  "value": "/^$eleclocalip$/"
                 }
               ]
             }
@@ -919,8 +926,8 @@
               "tags": [
                 {
                   "key": "url",
-                  "operator": "=",
-                  "value": "192.168.1.10"
+                  "operator": "=~",
+                  "value": "/^$eleclocalip$/"
                 }
               ]
             }
@@ -1265,8 +1272,8 @@
               "tags": [
                 {
                   "key": "url",
-                  "operator": "=",
-                  "value": "192.168.1.10"
+                  "operator": "=~",
+                  "value": "/^$eleclocalip$/"
                 }
               ]
             }
@@ -1308,7 +1315,7 @@
     }
   ],
   "time": {
-    "from": "now-12h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {
@@ -1337,14 +1344,36 @@
     ]
   },
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "value": "${VAR_ELECLOCALIP}",
+          "text": "${VAR_ELECLOCALIP}"
+        },
+        "datasource": null,
+        "hide": 2,
+        "includeAll": false,
+        "label": "elec.local IP",
+        "multi": false,
+        "name": "eleclocalip",
+        "options": [
+          {
+            "value": "${VAR_ELECLOCALIP}",
+            "text": "${VAR_ELECLOCALIP}"
+          }
+        ],
+        "query": "${VAR_ELECLOCALIP}",
+        "refresh": 0,
+        "type": "constant"
+      }
+    ]
   },
   "annotations": {
     "list": []
   },
   "refresh": false,
   "schemaVersion": 12,
-  "version": 26,
+  "version": 27,
   "links": [],
   "gnetId": null
 }
