@@ -106,7 +106,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "mean",
+              "alias": "BCN",
               "datasource": "weather",
               "dsType": "influxdb",
               "groupBy": [
@@ -153,6 +153,94 @@
               "datasource": "sunandmoon",
               "refId": "B",
               "target": "sun_altitude"
+            },
+            {
+              "alias": "Dorking",
+              "datasource": "weather",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "default",
+              "refId": "C",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "main_temp"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=51.2&lon=-0.3&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
+            },
+            {
+              "alias": "Riga",
+              "datasource": "weather",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "$interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "autogen",
+              "refId": "D",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "main_temp"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=56.9&lon=24.1&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
             }
           ],
           "timeFrom": null,
@@ -233,7 +321,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "wind speed",
+              "alias": "BCN",
               "datasource": "weather",
               "dsType": "influxdb",
               "groupBy": [
@@ -273,6 +361,94 @@
                   "key": "server",
                   "operator": "=",
                   "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
+            },
+            {
+              "alias": "Dorking",
+              "datasource": "weather",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "autogen",
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "wind_speed"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=51.2&lon=-0.3&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
+            },
+            {
+              "alias": "Riga",
+              "datasource": "weather",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "autogen",
+              "refId": "C",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "wind_speed"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=56.9&lon=24.1&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
                 }
               ]
             }
@@ -355,7 +531,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "wind speed",
+              "alias": "BCN",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -394,6 +570,92 @@
                   "key": "server",
                   "operator": "=",
                   "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
+            },
+            {
+              "alias": "Dorking",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "autogen",
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "main_humidity"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=51.2&lon=-0.3&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
+            },
+            {
+              "alias": "Riga",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "autogen",
+              "refId": "C",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "main_humidity"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=56.9&lon=24.1&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
                 }
               ]
             }
@@ -478,7 +740,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "3 hour rainfall",
+              "alias": "BCN",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -517,6 +779,92 @@
                   "key": "server",
                   "operator": "=",
                   "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
+            },
+            {
+              "alias": "Dorking",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "autogen",
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "rain_3h"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=51.2&lon=-0.3&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
+            },
+            {
+              "alias": "Riga",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "auto"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "autogen",
+              "refId": "C",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "rain_3h"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=56.9&lon=24.1&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
                 }
               ]
             }
@@ -558,7 +906,7 @@
     }
   ],
   "time": {
-    "from": "now-7d",
+    "from": "now-3d",
     "to": "now"
   },
   "timepicker": {
@@ -592,9 +940,9 @@
   "annotations": {
     "list": []
   },
-  "refresh": "15m",
+  "refresh": "1m",
   "schemaVersion": 12,
-  "version": 25,
+  "version": 30,
   "links": [],
   "gnetId": null
 }
