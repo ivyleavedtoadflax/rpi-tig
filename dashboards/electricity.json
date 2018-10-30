@@ -706,7 +706,7 @@
             }
           ],
           "spaceLength": 10,
-          "span": 6,
+          "span": 12,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -848,7 +848,20 @@
               "show": true
             }
           ]
-        },
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": null,
+      "repeatRowId": null,
+      "showTitle": false,
+      "title": "Dashboard Row",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
         {
           "aliasColors": {},
           "bars": false,
@@ -862,7 +875,7 @@
             "threshold2": null,
             "threshold2Color": "rgba(234, 112, 112, 0.22)"
           },
-          "id": 9,
+          "id": 10,
           "legend": {
             "avg": true,
             "current": true,
@@ -889,7 +902,7 @@
             }
           ],
           "spaceLength": 10,
-          "span": 6,
+          "span": 12,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -1041,7 +1054,7 @@
             }
           ],
           "thresholds": [],
-          "timeFrom": "30d",
+          "timeFrom": "3M",
           "timeShift": null,
           "title": "Electricity usage per day",
           "tooltip": {
@@ -1080,16 +1093,249 @@
           ]
         }
       ],
-      "repeat": null,
-      "repeatIteration": null,
-      "repeatRowId": null,
-      "showTitle": false,
-      "title": "Dashboard Row",
-      "titleSize": "h6"
+      "title": "New row"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_--_MIXED --}",
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 11,
+          "legend": {
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 1,
+          "points": true,
+          "renderer": "flot",
+          "seriesOverrides": [
+            {
+              "alias": "Temperature",
+              "fill": 0,
+              "yaxis": 2,
+              "zindex": -3
+            }
+          ],
+          "spaceLength": 10,
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "alias": "Electricity",
+              "datasource": "InfluxDB",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "4w"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "hide": false,
+              "measurement": "mqtt_consumer",
+              "orderByTime": "ASC",
+              "policy": "autogen",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "Pulses"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "sum"
+                  },
+                  {
+                    "params": [
+                      "*$pulse_rate * $day_rate"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "topic",
+                  "operator": "=~",
+                  "value": "/^$mqtt_topic$/"
+                }
+              ]
+            },
+            {
+              "alias": "Temperature",
+              "datasource": "weather",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "4w"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "httpjson",
+              "policy": "autogen",
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "main_temp"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "median"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "server",
+                  "operator": "=",
+                  "value": "http://api.openweathermap.org/data/2.5/weather?lat=41.4&lon=2.17&APPID=37d9c3e9c558a744187f85d8914b757c&units=metric"
+                }
+              ]
+            },
+            {
+              "alias": "Electricity (tail)",
+              "datasource": "InfluxDB",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "4w"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "tail",
+              "policy": "default",
+              "refId": "C",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "Pulses"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "sum"
+                  },
+                  {
+                    "params": [
+                      "*$pulse_rate*$day_rate"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "elec.local"
+                }
+              ]
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": "12M",
+          "timeShift": null,
+          "title": "Electricity usage (4 weeks)",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "transparent": true,
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "currencyEUR",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "decimals": null,
+              "format": "celsius",
+              "label": "temperature",
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "title": "New row"
     }
   ],
   "time": {
-    "from": "now-6h",
+    "from": "now/d",
     "to": "now"
   },
   "timepicker": {
@@ -1177,7 +1423,7 @@
   },
   "refresh": "5m",
   "schemaVersion": 12,
-  "version": 40,
+  "version": 51,
   "links": [],
   "gnetId": null
 }
