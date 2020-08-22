@@ -5,6 +5,11 @@ GRAFANA_VERSION=3.1.1
 all: telegraf.conf telegraf weather.conf weather mqtt influxdb grafana
 nuke: clean_docker nuke_data
 
+install_crontab: /etc/cron.d/speedtest.d
+
+/etc/cron.d/speedtest.d:
+	sudo cp $(@F) $@
+
 telegraf.conf: telegraf.template.conf .envrc Makefile
 	echo "Creating telegraf.conf file"; \
 	sed -e "s%\$${MQTT_HOST}%$(MQTT_HOST)%" \
