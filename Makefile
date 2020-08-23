@@ -1,14 +1,15 @@
 PWD = $(shell pwd)
-LOG_SIZE=10m
-GRAFANA_VERSION=3.1.1
 
 all: telegraf.conf telegraf weather.conf weather mqtt influxdb grafana
 nuke: clean_docker nuke_data
 
 install_crontab: /etc/cron.d/speedtest.d
 
-/etc/cron.d/speedtest.d:
+/etc/cron.d/speedtest.d: speedtest.d
 	sudo cp $(@F) $@
+
+test_speed:
+	sudo docker-compose run -d --rm speedtest
 
 telegraf.conf: telegraf.template.conf .envrc Makefile
 	echo "Creating telegraf.conf file"; \
@@ -36,24 +37,6 @@ weather.conf: weather.template.conf .envrc Makefile
         -e "s/\$${WEATHER_INTERVAL}/$(WEATHER_INTERVAL)/" \
         weather.template.conf > weather.conf
 
-grafana:
-	sudo docker run -t -d --name=grafana \
-	--log-opt max-size=${LOG_SIZE} \
-        -p 3000:3000 \
-	-d --restart unless-stopped \
-        -v /data/grafana/etc_grafana:/etc/grafana \
-        -v /data/grafana/data:/data \
-        heziegl/rpi-grafana:$(GRAFANA_VERSION)
-
-telegraf:
-	sudo docker run \
-	--log-opt max-size=${LOG_SIZE} \
-	-d --restart unless-stopped \
-	-v $(PWD)/telegraf.conf:/etc/telegraf/telegraf.conf:ro \
-	-v /data/speedtest:/data/speedtest \
-	--name telegraf \
-	-it telegraf:latest
-
 weather:
 	sudo docker run \
 	--log-opt max-size=${LOG_SIZE} \
@@ -61,15 +44,6 @@ weather:
         -v $(PWD)/weather.conf:/etc/telegraf/telegraf.conf:ro \
         --name weather \
         -it telegraf:latest
-
-influxdb:
-	sudo docker run \
-	--log-opt max-size=${LOG_SIZE} \
-	-v /data/influxdb:/var/lib/influxdb \
-	-v /data/influxdb/backup:/data/influxdb/backup \
-	-d --restart unless-stopped \
-	-p 8086:8086 --name influxdb \
-	-it influxdb:latest
 
 mqtt:
 	sudo docker run -ti -p 1883:1883 \
