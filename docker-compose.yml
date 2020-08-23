@@ -64,9 +64,9 @@ services:
     container_name: db
     restart: unless-stopped
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: user
-      POSTGRES_DB: db
+      POSTGRES_PASSWORD: $PGPASSWORD
+      POSTGRES_USER: $PGUSER
+      POSTGRES_DB: $PGDATABASE
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - /data/db:/var/lib/postgresql/data

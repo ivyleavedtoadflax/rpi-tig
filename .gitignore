@@ -3,3 +3,4 @@
 .telegraf.conf
 telegraf.conf
 weather.conf
+grafana.ini
