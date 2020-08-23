@@ -94,9 +94,9 @@ services:
 #    container_name: mqtt
 #    restart: unless-stopped
 #    volumes:
-#  	  - /data/mqtt/config:/mqtt/config:ro
-#  	  - /data/mqtt/log:/mqtt/log
-#  	  - /data/mqtt/data:/mqtt/data/
+#      - ./mosquitto.conf:/mqtt/config/mosquitto.conf:ro
+#      - /data/mqtt/log:/mqtt/log
+#      - /data/mqtt/data:/mqtt/data/
 #    logging:
 #      driver: "json-file"
 #      options:

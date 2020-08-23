@@ -4,3 +4,4 @@
 telegraf.conf
 weather.conf
 grafana.ini
+mosquitto.conf
