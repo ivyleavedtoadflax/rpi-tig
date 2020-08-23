@@ -88,3 +88,18 @@ services:
       8.8.8.8
       8.8.4.4
 
+# Not currently used
+#  mqtt:
+#    image: pascaldevink/rpi-mosquitto
+#    container_name: mqtt
+#    restart: unless-stopped
+#    volumes:
+#  	  - /data/mqtt/config:/mqtt/config:ro
+#  	  - /data/mqtt/log:/mqtt/log
+#  	  - /data/mqtt/data:/mqtt/data/
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "50m"
+#    ports:
+#      - 1883:1883
