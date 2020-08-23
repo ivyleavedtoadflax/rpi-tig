@@ -1,6 +1,3 @@
-[submodule "rpi-grafana"]
-	path = rpi-grafana
-	url = https://github.com/heziegl/rpi-grafana.git
 [submodule "rpi-mosquitto"]
 	path = rpi-mosquitto
 	url = https://github.com/pascaldevink/rpi-mosquitto
