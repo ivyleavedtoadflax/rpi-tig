@@ -1,6 +1,3 @@
-[submodule "rpi-mosquitto"]
-	path = rpi-mosquitto
-	url = https://github.com/pascaldevink/rpi-mosquitto
 [submodule "rpi-speedtest-cli"]
 	path = rpi-speedtest-cli
 	url = https://github.com/ivyleavedtoadflax/rpi-speedtest-cli.git
