@@ -46,6 +46,8 @@ telegraf.conf: templates/telegraf.template.conf .envrc Makefile
 		-e "s%\$${INFLUXDB_HOST}%$(INFLUXDB_HOST)%" \
 		-e "s/\$${INFLUXDB_PORT}/$(INFLUXDB_PORT)/" \
 		-e "s/\$${ROUTER_IP}/$(ROUTER_IP)/" \
+		-e "s%\$${WEBSITE_0}%$(WEBSITE_0)%" \
+		-e "s%\$${WEBSITE_1}%$(WEBSITE_1)%" \
 		-e "s/\$${ELEC_LOCAL_IP}/$(ELEC_LOCAL_IP)/" \
 		$< > $@
 
