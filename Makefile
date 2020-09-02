@@ -2,9 +2,9 @@ PWD = $(shell pwd)
 
 all: configs
 
-install_crontab: /etc/cron.d/speedtest
+install_crontab: /etc/cron.d/rpi-tig
 
-/etc/cron.d/speedtest: templates/crontab.template
+/etc/cron.d/rpi-tig: templates/crontab.template
 	sudo cp $< $@
 
 .env: .envrc
@@ -13,6 +13,8 @@ install_crontab: /etc/cron.d/speedtest
 .PHONY: test_speed
 test_speed:
 	sudo docker-compose up speedtest
+
+# Populate configs with environment variables
 
 configs: grafana.ini telegraf.conf weather.conf mosquitto.conf
 
