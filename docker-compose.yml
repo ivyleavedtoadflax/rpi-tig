@@ -52,7 +52,6 @@ services:
         - influxdb
     volumes:
       - ./grafana.ini:/etc/grafana/grafana.ini:ro
-      - /data/grafana/etc_grafana:/etc/grafana
       - /data/grafana/data:/data
     logging:
       driver: "json-file"
