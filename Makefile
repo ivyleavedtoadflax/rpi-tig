@@ -1,107 +1,100 @@
 PWD = $(shell pwd)
-LOG_SIZE=10m
-GRAFANA_VERSION=3.1.1
 
-all: telegraf.conf telegraf weather.conf weather mqtt influxdb grafana
-nuke: clean_docker nuke_data
+all: configs
 
-telegraf.conf: telegraf.template.conf .envrc Makefile
-	echo "Creating telegraf.conf file"; \
-	sed -e "s%\$${MQTT_HOST}%$(MQTT_HOST)%" \
-	-e "s/\$${MQTT_PORT}/$(MQTT_PORT)/" \
-	-e "s%\$${MQTT_TOPIC}%$(MQTT_TOPIC)%" \
-	-e "s/\$${MQTT_USERNAME}/$(MQTT_USERNAME)/" \
-	-e "s/\$${MQTT_PASSWORD}/$(MQTT_PASSWORD)/" \
-	-e "s/\$${DATABASE}/$(DATABASE)/" \
-	-e "s%\$${INFLUXDB_HOST}%$(INFLUXDB_HOST)%" \
-	-e "s/\$${INFLUXDB_PORT}/$(INFLUXDB_PORT)/" \
-	-e "s/\$${ROUTER_IP}/$(ROUTER_IP)/" \
-	-e "s/\$${ELEC_LOCAL_IP}/$(ELEC_LOCAL_IP)/" \
-	telegraf.template.conf > telegraf.conf
+install_crontab: /etc/cron.d/rpi-tig
 
-weather.conf: weather.template.conf .envrc Makefile
-	echo "Creating weather.conf file"; \
-        sed -e "s/\$${WEATHER_DATABASE}/$(WEATHER_DATABASE)/" \
+/etc/cron.d/rpi-tig: templates/crontab.template
+	sudo cp $< $@
+
+.env: .envrc
+	sed -e "/export/!d" -e "s/export //g" $< > $@ 
+
+.PHONY: test_speed
+test_speed:
+	sudo docker-compose up speedtest
+
+# Populate configs with environment variables
+
+configs: grafana.ini telegraf.conf weather.conf mosquitto.conf
+
+mosquitto.conf: templates/mosquitto.template.conf .envrc Makefile
+	@ echo "Creating $@ from $<"
+	#sed -e "s/\$${PGUSER}/$(PGUSER)/" \
+	#	-e "s/\$${PGPASSWORD}/$(PGPASSWORD)/" \
+	#	-e "s/\$${PGHOST}/$(PGHOST)/" \
+	#	-e "s/\$${PGPORT}/$(PGPORT)/" \
+	#	-e "s/\$${PGDATABASE}/$(PGDATABASE)/" \
+	#	$< > $@
+	cp $< $@
+
+grafana.ini: templates/grafana.template.ini .envrc Makefile
+	@ echo "Creating $@ from $<"
+	sed -e "s/\$${PGUSER}/$(PGUSER)/" \
+		-e "s/\$${PGPASSWORD}/$(PGPASSWORD)/" \
+		-e "s/\$${PGHOST}/$(PGHOST)/" \
+		-e "s/\$${PGPORT}/$(PGPORT)/" \
+		-e "s/\$${PGDATABASE}/$(PGDATABASE)/" \
+		$< > $@
+
+telegraf.conf: templates/telegraf.template.conf .envrc Makefile
+	echo "Creating $@ from $<"; \
+		sed -e "s%\$${MQTT_HOST}%$(MQTT_HOST)%" \
+		-e "s/\$${MQTT_PORT}/$(MQTT_PORT)/" \
+		-e "s%\$${MQTT_TOPIC}%$(MQTT_TOPIC)%" \
+		-e "s/\$${MQTT_USERNAME}/$(MQTT_USERNAME)/" \
+		-e "s/\$${MQTT_PASSWORD}/$(MQTT_PASSWORD)/" \
+		-e "s/\$${DATABASE}/$(DATABASE)/" \
+		-e "s%\$${INFLUXDB_HOST}%$(INFLUXDB_HOST)%" \
+		-e "s/\$${INFLUXDB_PORT}/$(INFLUXDB_PORT)/" \
+		-e "s/\$${ROUTER_IP}/$(ROUTER_IP)/" \
+		-e "s%\$${WEBSITE_0}%$(WEBSITE_0)%" \
+		-e "s%\$${WEBSITE_1}%$(WEBSITE_1)%" \
+		-e "s/\$${ELEC_LOCAL_IP}/$(ELEC_LOCAL_IP)/" \
+		$< > $@
+
+weather.conf: templates/weather.template.conf .envrc Makefile
+	echo "Creating $@ from $<"; \
+		sed -e "s/\$${WEATHER_DATABASE}/$(WEATHER_DATABASE)/" \
         -e "s%\$${INFLUXDB_HOST}%$(INFLUXDB_HOST)%" \
         -e "s/\$${INFLUXDB_PORT}/$(INFLUXDB_PORT)/" \
         -e "s%\$${API_ENDPOINT}%$(API_ENDPOINT)%" \
         -e "s/\$${API_KEY}/$(API_KEY)/" \
-        -e "s/\$${LON}/$(LON)/" \
-        -e "s/\$${LAT}/$(LAT)/" \
+        -e "s/\$${LON0}/$(LON0)/" \
+        -e "s/\$${LAT0}/$(LAT0)/" \
+        -e "s/\$${LON1}/$(LON1)/" \
+        -e "s/\$${LAT1}/$(LAT1)/" \
+        -e "s/\$${LON2}/$(LON2)/" \
+        -e "s/\$${LAT2}/$(LAT2)/" \
         -e "s/\$${WEATHER_INTERVAL}/$(WEATHER_INTERVAL)/" \
-        weather.template.conf > weather.conf
+		$< > $@
 
-grafana:
-	sudo docker run -t -d --name=grafana \
-	--log-opt max-size=${LOG_SIZE} \
-        -p 3000:3000 \
-	-d --restart unless-stopped \
-        -v /data/grafana/etc_grafana:/etc/grafana \
-        -v /data/grafana/data:/data \
-        heziegl/rpi-grafana:$(GRAFANA_VERSION)
+.PHONY: down
+down:
+	sudo docker-compose down
 
-telegraf:
-	sudo docker run \
-	--log-opt max-size=${LOG_SIZE} \
-	-d --restart unless-stopped \
-	-v $(PWD)/telegraf.conf:/etc/telegraf/telegraf.conf:ro \
-	-v /data/speedtest:/data/speedtest \
-	--name telegraf \
-	-it telegraf:latest
+.PHONY: up
+up: configs .env
+	sudo docker-compose up -d
 
-weather:
-	sudo docker run \
-	--log-opt max-size=${LOG_SIZE} \
-        -d --restart unless-stopped \
-        -v $(PWD)/weather.conf:/etc/telegraf/telegraf.conf:ro \
-        --name weather \
-        -it telegraf:latest
-
-influxdb:
-	sudo docker run \
-	--log-opt max-size=${LOG_SIZE} \
-	-v /data/influxdb:/var/lib/influxdb \
-	-v /data/influxdb/backup:/data/influxdb/backup \
-	-d --restart unless-stopped \
-	-p 8086:8086 --name influxdb \
-	-it influxdb:latest
-
-mqtt:
-	sudo docker run -ti -p 1883:1883 \
-	--log-opt max-size=${LOG_SIZE} \
-	-v /data/mqtt/config:/mqtt/config:ro \
-	-v /data/mqtt/log:/mqtt/log \
-	-v /data/mqtt/data:/mqtt/data/ \
-	 --restart unless-stopped \
-	 --name mqtt -d pascaldevink/rpi-mosquitto
-
-clean:
-	-sudo docker stop influxdb
-	-sudo docker rm influxdb
-	-sudo docker stop telegraf
-	-sudo docker rm telegraf
-	-sudo docker stop grafana
-	-sudo docker rm grafana
-	-sudo docker stop mqtt
-	-sudo docker rm mqtt
-	-sudo docker stop weather
-	-sudo docker rm weather
-
+.PHONY: nuke_data
 nuke_data:
 	-sudo rm -r /data/grafana /data/influx /data/telegraf
 
+.PHONY: test_mqtt
 test_mqtt:
 	mosquitto_sub -h $(MQTT_HOST)  -p $(MQTT_PORT) \
 	-u $(MQTT_USERNAME) -t "#"
 	#-P $(MQTT_PASSWORD) -t '#' 
 
+.PHONY: influxdb_latest
 influxdb_latest:
 	sudo docker exec -it influxdb influx \
 	-precision rfc3339 -database $(DATABASE) \
 	-execute "select last(Pulses) as Pulses, Cost, Night, \
 	time from /.*/"
 
+.PHONY: help
 help:
 	@cat Makefile
 
-.PHONY: clean test_mqtt influxdb_latest nuke_data clean help

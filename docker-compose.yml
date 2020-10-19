@@ -1,32 +1,104 @@
-version: '0.1.0'
+version: '3.3'
 services:
 
   influxdb:
     image: influxdb:latest
-    restart: always
+    restart: unless-stopped
     volumes:
         - /data/influxdb:/var/lib/influxdb 
+        - /data/influxdb/backup:/data/influxdb/backup
     ports: 
         - 8086:8086
     container_name: influxdb
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
 
   telegraf:
     image: telegraf:latest
-    restart: always
+    restart: unless-stopped
     links:
         - influxdb:influxdb
     volumes:
         - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+        - /data/speedtest:/data/speedtest
     container_name: telegraf
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+
+  weather:
+    image: telegraf:latest
+    container_name: weather
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+    volumes:
+      - ./weather.conf:/etc/telegraf/telegraf.conf:ro
   
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
-    restart: always
+    restart: unless-stopped
     ports:
         - 3000:3000
+    depends_on:
+      - db
     links:
         - influxdb
     volumes:
-        - /data/grafana:/var/lib/grafana
-        - grafana/grafana
+      - ./grafana.ini:/etc/grafana/grafana.ini:ro
+      - /data/grafana/data:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+
+  db:
+    image: arm32v7/postgres:latest
+    container_name: db
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: $PGPASSWORD
+      POSTGRES_USER: $PGUSER
+      POSTGRES_DB: $PGDATABASE
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - /data/db:/var/lib/postgresql/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+    ports: 
+      - 5432:5432
+
+  speedtest:
+    network_mode: host
+    build:
+      context: rpi-speedtest-cli
+    container_name: speedtest
+    volumes:
+      - /data/speedtest:/data/speedtest
+    dns:
+      8.8.8.8
+      8.8.4.4
+
+# Not currently used
+#  mqtt:
+#    image: pascaldevink/rpi-mosquitto
+#    container_name: mqtt
+#    restart: unless-stopped
+#    volumes:
+#      - ./mosquitto.conf:/mqtt/config/mosquitto.conf:ro
+#      - /data/mqtt/log:/mqtt/log
+#      - /data/mqtt/data:/mqtt/data/
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "50m"
+#    ports:
+#      - 1883:1883
